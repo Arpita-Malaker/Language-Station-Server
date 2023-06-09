@@ -29,19 +29,14 @@ async function run() {
 
     const instructor = client.db("languagedb1").collection("instructor");
     const usersCollection = client.db("languagedb1").collection("users");
-//user api
-// app.post('/users',async(req,res)=>{
-//   const user = req.body;
-// console.log(user);
-// const query = {email: user.email}
-//   const exitUser = await usersCollection.findOne(query);
-//   console.log(exitUser)
-//   if(exitUser){
-//     return res.send({message:'user already saved'})
-//   }
-//   const result = await usersCollection.insertOne(user);
-//   res.send(result);
-// })
+//JWT IN USER POST
+
+app.post('/jwt', (req, res) => {
+  const user = req.body;
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRECT, { expiresIn: '1hr' })
+  res.send({ token });
+
+})
 
 app.get('/users',async(req,res)=>{
   const result = await usersCollection.find().toArray();
