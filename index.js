@@ -307,6 +307,15 @@ async function run() {
       const result = await cartCollection.find().toArray();
       res.send(result);
     })
+
+ 
+
+    app.delete('/carts/:id',async(req,res)=>{
+      const id= req.params.id;
+      const q={_id:new ObjectId(id)}
+      const r = await cartCollection.deleteOne(q);
+      res.send(r);
+    })
     app.get('/instructor', async (req, res) => {
       const result = await instructor.find().toArray();
       res.send(result);
