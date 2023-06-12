@@ -213,7 +213,7 @@ async function run() {
     ////
 
     // update status as approve
-    app.patch('/classesInfo/:id', async (req, res) => {
+    app.patch('/classesInfo/admin/:id', async (req, res) => {
       const id = req.params.id;
       console.log(id);
       const filter = { _id: new ObjectId(id) };
@@ -234,7 +234,7 @@ async function run() {
 
 
     //update status as deny
-    app.put('/classesInfo/:id', async (req, res) => {
+    app.put('/classesInfo/admin/:id', async (req, res) => {
       const id = req.params.id;
       console.log(id);
       const filter = { _id: new ObjectId(id) };
@@ -270,13 +270,14 @@ async function run() {
       console.log(id);
       const filter = { _id: new ObjectId(id) };
       const updateFeedback = req.body;
+      console.log(updateFeedback)
       const updateDoc = {
         $set: {
           feedback: updateFeedback.feedback
         },
       };
       // const newItem = req.body;
-      const result = await classCollection.insertOne(filter, updateDoc);
+      const result = await classCollection.updateOne(filter, updateDoc);
       console.log('hello')
       res.send(result);
 
@@ -302,7 +303,10 @@ async function run() {
     })
 
 
-
+    app.get('/carts',async(res,req)=>{
+      const result = await cartCollection.find().toArray();
+      res.send(result);
+    })
     app.get('/instructor', async (req, res) => {
       const result = await instructor.find().toArray();
       res.send(result);
