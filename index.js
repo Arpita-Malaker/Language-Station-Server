@@ -317,6 +317,24 @@ async function run() {
       const r = await cartCollection.deleteOne(q);
       res.send(r);
     })
+      
+
+        // create payment intent
+        app.post('/create-payment-intent', async (req, res) => {
+          const { price } = req.body;
+          const amount = parseInt(price * 100);
+console.log(price,amount)
+          const paymentIntent = await stripe.paymentIntents.create({
+            amount: amount,
+            currency: 'usd',
+            payment_method_types: ['card']
+          });
+    
+          res.send({
+            clientSecret: paymentIntent.client_secret
+          })
+        })
+
     app.get('/instructor', async (req, res) => {
       const result = await instructor.find().toArray();
       res.send(result);
