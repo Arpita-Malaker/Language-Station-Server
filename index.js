@@ -3,6 +3,7 @@ const app = express();
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 require('dotenv').config();
+const stripe = require('stripe')(process.env.PAYMENT_SECRECT_KEY);
 const port = process.env.PORT || 5000;
 
 //middliewire
