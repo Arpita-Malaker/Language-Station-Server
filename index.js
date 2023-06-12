@@ -303,7 +303,7 @@ async function run() {
     })
 
 
-    app.get('/carts',async(res,req)=>{
+    app.get('/carts',async(req,res)=>{
       const result = await cartCollection.find().toArray();
       res.send(result);
     })
