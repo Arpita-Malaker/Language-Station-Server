@@ -58,6 +58,7 @@ async function run() {
     const usersCollection = client.db("languagedb1").collection("users");
     const classCollection = client.db("languagedb1").collection("classesInfo");
     const cartCollection = client.db("languagedb1").collection("carts");
+    const paymentCollection = client.db("languagedb1").collection("payment");
 
 
 
@@ -103,12 +104,9 @@ async function run() {
     //
 
 
-    app.get('/users', async (req, res) => {
-      const result = await usersCollection.find().toArray();
-      res.send(result);
-    })
+  
 
-    app.post('/users', async (req, res) => {
+    app.post('/users',  async (req, res) => {
 
       const user = req.body;
       const query = { email: user.email }
@@ -120,6 +118,11 @@ async function run() {
       const result = await usersCollection.insertOne(user)
       res.send(result);
 
+    })
+
+    app.get('/users', async (req, res) => {
+      const result = await usersCollection.find().toArray();
+      res.send(result);
     })
 
 
@@ -196,19 +199,12 @@ async function run() {
     })
 
     //send the classesCollection on server
-    app.post('/classesInfo', verifyJWT, verifyInstructor, async (req, res) => {
+    app.post('/classesInfo', async (req, res) => {
 
       const newItem = req.body;
       const result = await classCollection.insertOne(newItem);
       res.send(result);
     })
-
-
-
-    ///
-    // get 
-
-
 
 
     ////
@@ -303,8 +299,14 @@ async function run() {
       res.send(result);
     })
 
-
     app.get('/carts',async(req,res)=>{
+      const result = await cartCollection.find().toArray();
+      res.send(result);
+
+    })
+
+
+    app.get('/carts/:email',async(req,res)=>{
       const result = await cartCollection.find().toArray();
       res.send(result);
     })
@@ -334,6 +336,44 @@ console.log(price,amount)
             clientSecret: paymentIntent.client_secret
           })
         })
+
+  //payment api
+
+  app.post('/payments', async(req,res)=>{
+    const payment = req.body;
+
+    const result = await paymentCollection.insertOne(payment);
+    res.send(result);
+  })
+
+  app.get('/payments', async(req,res)=>{
+   
+    const result = await paymentCollection.find().toArray();
+    res.send(result);
+  })
+
+  app.put('/classesInfo/:id', async(req,res)=>{
+
+    const id = req.params.id;
+    console.log(id);
+    const filter = { _id: new ObjectId(id) };
+
+    const updateDoc = {
+
+      $inc: {seats : -1,
+
+        EnrollStudent:+1
+        }
+    };
+
+    const result = await classCollection.updateOne(filter, updateDoc);
+   
+    res.send(result);
+    
+    
+
+  })
+
 
     app.get('/instructor', async (req, res) => {
       const result = await instructor.find().toArray();
